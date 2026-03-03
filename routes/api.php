@@ -12,6 +12,7 @@ use App\Http\Controllers\RegistroClinicoController;
 use App\Http\Controllers\SolicitudAdopcionController;
 use App\Http\Controllers\MetodoPagoController;
 use App\Http\Controllers\PagoController;
+use App\Http\Controllers\AuthController;
 
 Route::apiResource('roles', RolController::class);
 Route::apiResource('usuarios', UsuarioController::class);
@@ -24,3 +25,4 @@ Route::apiResource('registros-clinicos', RegistroClinicoController::class);
 Route::apiResource('solicitudes-adopcion', SolicitudAdopcionController::class);
 Route::apiResource('metodos-pago', MetodoPagoController::class);
 Route::apiResource('pagos', PagoController::class);
+Route::post('login', [AuthController::class, 'login']);

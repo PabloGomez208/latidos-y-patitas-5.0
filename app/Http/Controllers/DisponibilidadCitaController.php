@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DisponibilidadCita;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DisponibilidadCitaController extends Controller
 {
@@ -15,7 +16,18 @@ class DisponibilidadCitaController extends Controller
 
     public function store(Request $request)
     {
-        $disponibilidad = DisponibilidadCita::create($request->all());
+        $data = $request->validate([
+            'id_veterinario' => ['nullable', 'integer'],
+            'fecha' => ['required', 'date'],
+            'hora_inicio' => ['required', 'date_format:H:i'],
+            'hora_fin' => ['required', 'date_format:H:i'],
+            'estado' => ['nullable', 'in:disponible,reservada'],
+        ]);
+        if (empty($data['id_veterinario'])) {
+            $data['id_veterinario'] = DB::table('veterinarios')->value('id_veterinario');
+        }
+        $data['estado'] = $data['estado'] ?? 'disponible';
+        $disponibilidad = DisponibilidadCita::create($data);
         return response()->json($disponibilidad, 201);
     }
 

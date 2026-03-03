@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cita;
+use App\Models\DisponibilidadCita;
 use Illuminate\Http\Request;
 
 class CitaController extends Controller
@@ -15,7 +16,15 @@ class CitaController extends Controller
 
     public function store(Request $request)
     {
-        $cita = Cita::create($request->all());
+        $data = $request->validate([
+            'id_cliente' => ['required', 'integer', 'exists:usuarios,id_usuario'],
+            'id_disponibilidad' => ['required', 'integer', 'exists:disponibilidad_citas,id_disponibilidad'],
+            'motivo' => ['nullable', 'string', 'max:255'],
+            'estado' => ['nullable', 'in:pendiente,confirmada,cancelada'],
+        ]);
+        $data['estado'] = $data['estado'] ?? 'pendiente';
+        $cita = Cita::create($data);
+        DisponibilidadCita::where('id_disponibilidad', $data['id_disponibilidad'])->update(['estado' => 'reservada']);
         return response()->json($cita, 201);
     }
 

@@ -14,7 +14,14 @@ class SolicitudAdopcion extends Model
         'id_cliente',
         'id_mascota',
         'fecha_solicitud',
-        'estado'
+        'estado',
+        'motivo',
+        'direccion',
+        'tiene_mascotas',
+        'experiencia',
+        'aprobado_por',
+        'fecha_revision',
+        'nota_revision'
     ];
     
     // Relaciones
