@@ -18,6 +18,7 @@ Route::apiResource('roles', RolController::class);
 Route::apiResource('usuarios', UsuarioController::class);
 Route::apiResource('veterinarios', VeterinarioController::class);
 Route::apiResource('mascotas', MascotaController::class);
+Route::get('mascotas/especies', [MascotaController::class, 'especies']);
 Route::apiResource('disponibilidad-citas', DisponibilidadCitaController::class);
 Route::apiResource('citas', CitaController::class);
 Route::apiResource('historias-clinicas', HistoriaClinicaController::class);
