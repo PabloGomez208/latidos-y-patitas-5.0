@@ -14,7 +14,6 @@ use App\Http\Controllers\RegistroClinicoController;
 use App\Http\Controllers\SolicitudAdopcionController;
 use App\Http\Controllers\MetodoPagoController;
 use App\Http\Controllers\PagoController;
-use App\Http\Controllers\AuthController;
 
 // Seguridad desactivada: todas las rutas abiertas mientras terminas el frontend
 Route::apiResource('roles', RolController::class);
@@ -41,7 +40,3 @@ Route::post('solicitudes-adopcion/{id}/aprobar', [SolicitudAdopcionController::c
 Route::post('solicitudes-adopcion/{id}/rechazar', [SolicitudAdopcionController::class, 'rechazar']);
 Route::apiResource('metodos-pago', MetodoPagoController::class);
 Route::apiResource('pagos', PagoController::class);
-<<<<<<< HEAD
-=======
-Route::post('login', [AuthController::class, 'login']);
->>>>>>> f026b2ccceacc8aef92ea99633e715f274f2e784

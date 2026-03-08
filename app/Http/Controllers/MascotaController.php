@@ -46,8 +46,6 @@ class MascotaController extends Controller
         Mascota::destroy($id);
         return response()->json(['message' => 'Mascota eliminada']);
     }
-<<<<<<< HEAD
-=======
 
     public function especies(Request $request)
     {
@@ -62,5 +60,4 @@ class MascotaController extends Controller
             ->values();
         return response()->json($rows);
     }
->>>>>>> f026b2ccceacc8aef92ea99633e715f274f2e784
 }
