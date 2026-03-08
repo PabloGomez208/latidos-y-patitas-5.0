@@ -49,4 +49,16 @@ class DisponibilidadCitaController extends Controller
         DisponibilidadCita::destroy($id);
         return response()->json(['message' => 'Disponibilidad eliminada']);
     }
+
+    public function cambiarEstado(Request $request, $id)
+    {
+        $estado = $request->input('estado');
+        if (!in_array($estado, ['disponible','reservada'], true)) {
+            return response()->json(['message' => 'Estado inválido'], 422);
+        }
+        $disponibilidad = DisponibilidadCita::findOrFail($id);
+        $disponibilidad->estado = $estado;
+        $disponibilidad->save();
+        return response()->json($disponibilidad);
+    }
 }

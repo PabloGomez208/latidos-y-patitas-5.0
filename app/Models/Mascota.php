@@ -17,6 +17,7 @@ class Mascota extends Model
         'edad',
         'sexo',
         'descripcion',
+        'imagen',
         'estado',
         'fecha_publicacion',
         'id_admin'

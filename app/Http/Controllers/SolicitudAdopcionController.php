@@ -57,6 +57,30 @@ class SolicitudAdopcionController extends Controller
         return response()->json($solicitud);
     }
 
+    public function adoptar(Request $request, $id)
+    {
+        $data = $request->validate([
+            'id_cliente' => ['nullable', 'integer'],
+            'motivo' => ['nullable', 'string'],
+            'direccion' => ['nullable', 'string', 'max:255'],
+            'tiene_mascotas' => ['nullable', 'boolean'],
+            'experiencia' => ['nullable', 'string'],
+        ]);
+        $data['id_mascota'] = (int) $id;
+        if (empty($data['id_cliente'])) {
+            $data['id_cliente'] = \Illuminate\Support\Facades\DB::table('usuarios')
+                ->whereIn('id_rol', function ($q) {
+                    $q->select('id_rol')->from('roles')->where('nombre_rol', 'cliente');
+                })
+                ->value('id_usuario');
+        }
+        $data['fecha_solicitud'] = now()->toDateString();
+        $data['estado'] = 'pendiente';
+        $solicitud = SolicitudAdopcion::create($data);
+        return response()->json($solicitud, 201);
+    }
+
+
     public function aprobar($id)
     {
         $solicitud = SolicitudAdopcion::findOrFail($id);

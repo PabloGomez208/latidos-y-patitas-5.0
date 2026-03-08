@@ -24,7 +24,20 @@ class MascotaController extends Controller
 
     public function store(Request $request)
     {
-        $mascota = Mascota::create($request->all());
+        $data = $request->only([
+            'nombre','especie','raza','edad','sexo','descripcion','estado','fecha_publicacion','id_admin','imagen'
+        ]);
+        if (!$request->filled('fecha_publicacion')) {
+            $data['fecha_publicacion'] = now()->toDateString();
+        }
+        if (!$request->filled('estado')) {
+            $data['estado'] = 'disponible';
+        }
+        if ($request->hasFile('imagen')) {
+            $path = $request->file('imagen')->store('mascotas', 'public');
+            $data['imagen'] = rtrim(env('APP_URL', 'http://localhost'), '/').'/storage/'.$path;
+        }
+        $mascota = Mascota::create($data);
         return response()->json($mascota, 201);
     }
 
@@ -37,7 +50,14 @@ class MascotaController extends Controller
     public function update(Request $request, $id)
     {
         $mascota = Mascota::findOrFail($id);
-        $mascota->update($request->all());
+        $data = $request->only([
+            'nombre','especie','raza','edad','sexo','descripcion','estado','fecha_publicacion','id_admin','imagen'
+        ]);
+        if ($request->hasFile('imagen')) {
+            $path = $request->file('imagen')->store('mascotas', 'public');
+            $data['imagen'] = rtrim(env('APP_URL', 'http://localhost'), '/').'/storage/'.$path;
+        }
+        $mascota->update($data);
         return response()->json($mascota);
     }
 

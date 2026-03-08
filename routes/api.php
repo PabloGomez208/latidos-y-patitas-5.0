@@ -14,6 +14,7 @@ use App\Http\Controllers\RegistroClinicoController;
 use App\Http\Controllers\SolicitudAdopcionController;
 use App\Http\Controllers\MetodoPagoController;
 use App\Http\Controllers\PagoController;
+use App\Http\Controllers\ContactoMensajeController;
 
 // Seguridad desactivada: todas las rutas abiertas mientras terminas el frontend
 Route::apiResource('roles', RolController::class);
@@ -27,6 +28,8 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::apiResource('mascotas', MascotaController::class);
 Route::get('mascotas/especies', [MascotaController::class, 'especies']);
 Route::apiResource('disponibilidad-citas', DisponibilidadCitaController::class);
+Route::patch('disponibilidad-citas/{id}/estado', [DisponibilidadCitaController::class, 'cambiarEstado']);
+Route::apiResource('citas', CitaController::class);
 Route::post('citas/{id}/confirmar', [CitaController::class, 'confirmar']);
 Route::post('citas/{id}/cancelar', [CitaController::class, 'cancelar']);
 Route::get('admin/citas-activas', [CitaController::class, 'activasAhora']);
@@ -36,7 +39,12 @@ Route::apiResource('veterinarios', VeterinarioController::class);
 Route::apiResource('historias-clinicas', HistoriaClinicaController::class);
 Route::apiResource('registros-clinicos', RegistroClinicoController::class);
 Route::apiResource('solicitudes-adopcion', SolicitudAdopcionController::class);
+Route::post('mascotas/{id}/adoptar', [SolicitudAdopcionController::class, 'adoptar']);
 Route::post('solicitudes-adopcion/{id}/aprobar', [SolicitudAdopcionController::class, 'aprobar']);
 Route::post('solicitudes-adopcion/{id}/rechazar', [SolicitudAdopcionController::class, 'rechazar']);
 Route::apiResource('metodos-pago', MetodoPagoController::class);
 Route::apiResource('pagos', PagoController::class);
+// Contacto
+Route::get('admin/contacto-mensajes', [ContactoMensajeController::class, 'index']);
+Route::post('contacto', [ContactoMensajeController::class, 'store']);
+Route::patch('admin/contacto-mensajes/{id}/estado', [ContactoMensajeController::class, 'updateEstado']);
