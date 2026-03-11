@@ -29,6 +29,27 @@ class CitaController extends Controller
         return response()->json($citas);
     }
 
+    public function porCliente($userId)
+    {
+        $estado = request()->query('estado');
+        $q = Cita::with('disponibilidad.veterinario')
+            ->where('id_cliente', $userId);
+        if (!empty($estado)) {
+            $q->where('estado', $estado);
+        }
+        $citas = $q->get();
+        return response()->json($citas);
+    }
+
+    public function pendientesPorCliente($userId)
+    {
+        $citas = Cita::with('disponibilidad.veterinario')
+            ->where('id_cliente', $userId)
+            ->where('estado', 'pendiente')
+            ->get();
+        return response()->json($citas);
+    }
+
     public function activasAhora()
     {
         $today = now()->toDateString();

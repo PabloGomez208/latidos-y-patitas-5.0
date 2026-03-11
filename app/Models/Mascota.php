@@ -16,6 +16,8 @@ class Mascota extends Model
         'raza',
         'edad',
         'sexo',
+        'id_especie',
+        'id_sexo',
         'descripcion',
         'imagen',
         'estado',
@@ -27,6 +29,16 @@ class Mascota extends Model
     public function administrador()
     {
         return $this->belongsTo(Usuario::class, 'id_admin', 'id_usuario');
+    }
+    
+    public function especieRef()
+    {
+        return $this->belongsTo(Especie::class, 'id_especie', 'id_especie');
+    }
+    
+    public function sexoRef()
+    {
+        return $this->belongsTo(Sexo::class, 'id_sexo', 'id_sexo');
     }
     
     public function historiaClinica()

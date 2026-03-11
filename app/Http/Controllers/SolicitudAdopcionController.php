@@ -95,30 +95,46 @@ class SolicitudAdopcionController extends Controller
 
     public function aprobar($id)
     {
-        $solicitud = SolicitudAdopcion::findOrFail($id);
-        $solicitud->estado = 'aprobada';
-        $solicitud->save();
-        // cuando se aprueba la solicitud, marcamos la mascota como adoptada
-        $mascota = $solicitud->mascota;
-        if ($mascota) {
-            $mascota->estado = 'adoptada';
-            $mascota->save();
-        }
-        return response()->json($solicitud);
+        return $this->updateEstadoSimple($id, 'aprobada');
     }
 
     public function rechazar($id)
     {
-        $solicitud = SolicitudAdopcion::findOrFail($id);
-        $solicitud->estado = 'rechazada';
-        $solicitud->save();
-        // en caso de rechazo no tocamos la mascota, permanece disponible
-        return response()->json($solicitud);
+        return $this->updateEstadoSimple($id, 'rechazada');
     }
 
     public function destroy($id)
     {
         SolicitudAdopcion::destroy($id);
         return response()->json(['message' => 'Solicitud de adopción eliminada']);
+    }
+
+    public function updateEstado(Request $request, $id)
+    {
+        $valor = $request->input('estado') ?? $request->input('accion');
+        if (!$valor) {
+            return response()->json(['message' => 'Estado requerido'], 422);
+        }
+        $valor = strtolower($valor);
+        if (in_array($valor, ['aprobar','aprobada','aceptar','aceptada'])) {
+            return $this->updateEstadoSimple($id, 'aprobada');
+        }
+        if (in_array($valor, ['rechazar','rechazada'])) {
+            return $this->updateEstadoSimple($id, 'rechazada');
+        }
+        return response()->json(['message' => 'Estado inválido'], 422);
+    }
+
+    protected function updateEstadoSimple($id, $estado)
+    {
+        $solicitud = SolicitudAdopcion::with('mascota')->findOrFail($id);
+        $solicitud->estado = $estado;
+        $solicitud->fecha_revision = now()->toDateString();
+        $solicitud->save();
+        if ($estado === 'aprobada' && $solicitud->mascota) {
+            $solicitud->mascota->estado = 'adoptada';
+            $solicitud->mascota->save();
+        }
+        return response()->json($solicitud);
     }
 }

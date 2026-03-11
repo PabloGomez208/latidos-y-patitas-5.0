@@ -27,13 +27,16 @@ Route::post('logout', [AuthController::class, 'logout']);
 // Recursos abiertos
 Route::apiResource('mascotas', MascotaController::class);
 Route::get('mascotas/especies', [MascotaController::class, 'especies']);
+Route::get('sexos', [MascotaController::class, 'sexos']);
+Route::get('especies', [MascotaController::class, 'especies']);
 Route::apiResource('disponibilidad-citas', DisponibilidadCitaController::class);
 Route::patch('disponibilidad-citas/{id}/estado', [DisponibilidadCitaController::class, 'cambiarEstado']);
 Route::apiResource('citas', CitaController::class);
 Route::post('citas/solicitar', [CitaController::class, 'solicitar']);
 Route::post('citas/{id}/confirmar', [CitaController::class, 'confirmar']);
 Route::post('citas/{id}/cancelar', [CitaController::class, 'cancelar']);
-// veterinarios: acceso a sus propias citas y pendientes
+Route::get('usuarios/{userId}/citas', [CitaController::class, 'porCliente']);
+Route::get('usuarios/{userId}/citas/pendientes', [CitaController::class, 'pendientesPorCliente']);
 Route::get('veterinarios/{vetId}/citas', [CitaController::class, 'porVeterinario']);
 Route::get('veterinarios/{vetId}/citas/pendientes', [CitaController::class, 'pendientesPorVeterinario']);
 Route::post('veterinarios/{vetId}/citas/{id}/confirmar', [CitaController::class, 'confirmarPorVeterinario']);
@@ -49,6 +52,7 @@ Route::get('admin/solicitudes-adopcion/pendientes', [SolicitudAdopcionController
 Route::post('mascotas/{id}/adoptar', [SolicitudAdopcionController::class, 'adoptar']);
 Route::post('solicitudes-adopcion/{id}/aprobar', [SolicitudAdopcionController::class, 'aprobar']);
 Route::post('solicitudes-adopcion/{id}/rechazar', [SolicitudAdopcionController::class, 'rechazar']);
+Route::patch('solicitudes-adopcion/{id}/estado', [SolicitudAdopcionController::class, 'updateEstado']);
 Route::apiResource('metodos-pago', MetodoPagoController::class);
 Route::apiResource('pagos', PagoController::class);
 // Contacto
